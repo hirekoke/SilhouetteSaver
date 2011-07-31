@@ -1,0 +1,9 @@
+﻿<DockPanel x:Class="SilhouetteSaver.MainPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Opacity="1"
+        Loaded="MainWindow_Loaded"
+        >
+    <Canvas Width="Auto" Height="Auto" Background="Transparent" 
+                x:Name="canvas"/>
+</DockPanel>
