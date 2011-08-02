@@ -40,6 +40,7 @@ namespace SilhouetteSaver
             WindowState = WindowState.Maximized;
             Background = Brushes.Transparent;
             AllowsTransparency = true;
+            ShowInTaskbar = false;
             Opacity = 1.0;
 
             _info = info;
