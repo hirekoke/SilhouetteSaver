@@ -84,5 +84,12 @@ namespace SilhouetteSaver.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        public static byte[] test {
+            get {
+                object obj = ResourceManager.GetObject("test", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

@@ -54,6 +54,8 @@ Silhouette Saver
     - プレイリストで無駄に空行ができる
 
   Change log:
+    - 2011/11/03:
+	  * タスクバーに表示されてしまっていたのを修正
     - 2011/07/31: 公開 (http://www.nicovideo.jp/watch/sm15170407)
 
   連絡先:

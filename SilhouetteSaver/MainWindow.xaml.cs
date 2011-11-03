@@ -29,12 +29,17 @@ namespace SilhouetteSaver
         {
         }
 
+        protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
+        {
+            return base.HitTestCore(hitTestParameters);
+        }
+
         public MainWindow(PlayInfo info)
         {
             InitializeComponent();
 
             Mouse.OverrideCursor = Cursors.None;
-
+            Cursor = Cursors.None;
             Topmost = true;
             WindowStyle = WindowStyle.None;
             WindowState = WindowState.Maximized;

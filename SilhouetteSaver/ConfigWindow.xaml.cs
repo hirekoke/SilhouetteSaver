@@ -113,8 +113,7 @@ namespace SilhouetteSaver
                 }
                 else
                     return HitTestResultBehavior.Continue;
-            },
-new PointHitTestParameters(pt));
+            }, new PointHitTestParameters(pt));
 
             if (hitRow != null)
             {
@@ -182,6 +181,7 @@ new PointHitTestParameters(pt));
                         info.Uri = uri;
                     }
                 }
+                getRow(info);
                 _editingUri = false;
             }
         }
@@ -239,5 +239,12 @@ new PointHitTestParameters(pt));
         }
 
         #endregion
+
+        private DataGridRow getRow(PlayInfo info)
+        {
+            playListGrid.CanUserSortColumns = true;
+            
+            return null;
+        }
     }
 }
