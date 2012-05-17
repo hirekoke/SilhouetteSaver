@@ -15,6 +15,13 @@ namespace SilhouetteSaver
             get { return _playList; }
         }
 
+        private bool _showInAllScreen = false;
+        public bool ShowInAllScreen
+        {
+            get { return _showInAllScreen; }
+            set { _showInAllScreen = value; }
+        }
+
         private static Config _instance;
         public static Config Instance
         {
@@ -57,6 +64,7 @@ namespace SilhouetteSaver
                 config = new Config();
                 config.PlayList.Clear();
 
+                bool stateShowInAllScreen = false;
                 using (XmlReader reader = XmlReader.Create(fn))
                 {
                     while (reader.Read())
@@ -66,10 +74,15 @@ namespace SilhouetteSaver
                         switch (reader.NodeType)
                         {
                             case XmlNodeType.Element:
+                                stateShowInAllScreen = false;
                                 if (reader.Name.ToLower() == "playlist")
                                 {
                                     PlayList lst = PlayList.ReadXml(reader);
                                     config._playList = lst;
+                                }
+                                else if (reader.Name.ToLower() == "showinallscreen")
+                                {
+                                    stateShowInAllScreen = true;
                                 }
                                 break;
 
@@ -80,6 +93,14 @@ namespace SilhouetteSaver
                                 }
                                 break;
 
+                            case XmlNodeType.CDATA:
+                            case XmlNodeType.Text:
+                                if(stateShowInAllScreen)
+                                {
+                                    bool value = reader.Value.Trim() != "0";
+                                    config._showInAllScreen = value;
+                                }
+                                break;
                             default:
                                 break;
                         }
@@ -111,6 +132,8 @@ namespace SilhouetteSaver
                 writer.WriteStartDocument();
 
                 writer.WriteStartElement("Config");
+
+                writer.WriteElementString("showinallscreen", _showInAllScreen ? "1" : "0");
 
                 // write playlist
                 this.PlayList.WriteXml(writer);

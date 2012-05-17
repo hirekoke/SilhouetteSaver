@@ -15,11 +15,20 @@
     
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Row="0">
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <CheckBox
+                Margin="3, 3, 3, 8"
+                IsChecked="{Binding Path=ShowInAllScreen,UpdateSourceTrigger=PropertyChanged}">
+                全ディスプレイに表示する
+            </CheckBox>
+        </StackPanel>
+        
+        <DockPanel Grid.Row="1">
             <TextBlock Text="再生リスト" DockPanel.Dock="Top" Margin="3" />
             <DataGrid Name="playListGrid" Margin="3"
                     AutoGenerateColumns="False"
@@ -81,7 +90,7 @@
             </DataGrid>
         </DockPanel>
         
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />

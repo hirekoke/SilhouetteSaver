@@ -15,12 +15,6 @@ namespace SilhouetteSaver
     /// </summary>
     public partial class App : Application
     {
-        private MainWindow _win = null;
-        private ConfigWindow _cfgWin = null;
-        private HwndSource winWPFContent;
-
-        private MainPanel _previewPanel = null;
-
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -68,7 +62,6 @@ namespace SilhouetteSaver
                 {
                     startScr();
                 }
-
             }
             catch (Exception ex)
             {
@@ -78,15 +71,69 @@ namespace SilhouetteSaver
             }
         }
 
-        private void startScr()
+        private void exit()
         {
-            if (_win == null)
+            Application.Current.Shutdown();
+        }
+
+        private MainWindow _mainWin = null;
+        private List<ClonedWindow> _clonedWins = new List<ClonedWindow>();
+        private void clearClonedWindows()
+        {
+            foreach (ClonedWindow win in _clonedWins)
             {
-                _win = new MainWindow();
-                _win.Show();
+                if (win.IsLoaded && win.IsVisible) win.Close();
+            }
+            _clonedWins.Clear();
+            _mainWin.Exit();
+        }
+        private void showClonedWindows()
+        {
+            int i = 0;
+            foreach (System.Windows.Forms.Screen scr in System.Windows.Forms.Screen.AllScreens)
+            {
+                if (i == 0)
+                {
+                    if (_mainWin == null) _mainWin = new MainWindow();
+                    _mainWin.Topmost = true;
+                    _mainWin.Left = scr.Bounds.Left;
+                    _mainWin.Top = scr.Bounds.Top;
+                    _mainWin.Show();
+                    _mainWin.WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    ClonedWindow win = new ClonedWindow(_mainWin, scr);
+                    win.Topmost = true;
+                    win.Left = scr.Bounds.Left;
+                    win.Top = scr.Bounds.Top;
+                    win.Width = scr.Bounds.Width;
+                    win.Height = scr.Bounds.Height;
+                    win.Show();
+                    win.WindowState = WindowState.Maximized;
+
+                    _clonedWins.Add(win);
+                }
+                i++;
             }
         }
 
+        /// <summary>
+        /// スクリーンセーバーを起動する
+        /// </summary>
+        private void startScr()
+        {
+            Microsoft.Win32.SystemEvents.DisplaySettingsChanged += (s, e) =>
+            {
+                // マルチディスプレイ構成に変更があった場合は諦めて落とす
+                clearClonedWindows();
+            };
+            showClonedWindows();
+        }
+
+        /// <summary>
+        /// プレビュー画面を表示する
+        /// </summary>
         private void startPreview(IntPtr pPreviewHnd)
         {
             RECT lpRect = new RECT();
@@ -100,10 +147,15 @@ namespace SilhouetteSaver
             sourceParams.ParentWindow = pPreviewHnd;
             sourceParams.WindowStyle = (int)(WindowStyles.WS_VISIBLE | WindowStyles.WS_CHILD | WindowStyles.WS_CLIPCHILDREN);
 
-            winWPFContent = new HwndSource(sourceParams);
-            winWPFContent.Disposed += new EventHandler(winWPFContent_Disposed);
+            // プレビュー画面では静音にする
+            MainPanel previewPanel = new MainPanel(true);
 
-            _previewPanel = new MainPanel();
+            HwndSource winWPFContent = new HwndSource(sourceParams);
+            winWPFContent.Disposed += (s, e) =>
+            {
+                if (previewPanel != null)
+                    previewPanel.PanelExit();
+            };
 
             Canvas canvas = new Canvas();
             canvas.Background = System.Windows.Media.Brushes.AliceBlue;
@@ -119,41 +171,23 @@ namespace SilhouetteSaver
             canvas.Children.Add(img);
 
             // movie panel
-            Canvas.SetTop(_previewPanel, 0);
-            Canvas.SetLeft(_previewPanel, 0);
-            _previewPanel.Width = sourceParams.Width;
-            _previewPanel.Height = sourceParams.Height;
-            canvas.Children.Add(_previewPanel);
+            Canvas.SetTop(previewPanel, 0);
+            Canvas.SetLeft(previewPanel, 0);
+            previewPanel.Width = sourceParams.Width;
+            previewPanel.Height = sourceParams.Height;
+            canvas.Children.Add(previewPanel);
 
             winWPFContent.RootVisual = canvas;
         }
 
-        void winWPFContent_Disposed(object sender, EventArgs e)
-        {
-            if (_previewPanel != null)
-            {
-                _previewPanel.PanelExit();
-            }
-        }
-
+        /// <summary>
+        /// 設定画面を表示する
+        /// </summary>
         private void showConfig()
         {
-            if (_cfgWin == null)
-            {
-                _cfgWin = new ConfigWindow();
-                //_cfgWin.ToolTip = true;
-                _cfgWin.ShowDialog();
-            }
+            ConfigWindow _cfgWin = new ConfigWindow();
+            _cfgWin.ShowDialog();
         }
 
-        private void exit()
-        {
-            if (_previewPanel != null) _previewPanel.PanelExit();
-            if (_win != null && _win.IsLoaded)
-            {
-                _win.Close();
-            }
-            Application.Current.Shutdown();
-        }
     }
 }

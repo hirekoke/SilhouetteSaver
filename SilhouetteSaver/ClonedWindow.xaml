@@ -1,0 +1,40 @@
+﻿<Window x:Class="SilhouetteSaver.ClonedWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DockPanel Margin="0" Background="Transparent">
+        <!-- top -->
+        <Rectangle
+            DockPanel.Dock="Top"
+            Height="{Binding Path=SpaceHeight, Mode=OneWay}"
+            Fill="Black"
+            />
+
+        <!-- bottom -->
+        <Rectangle
+            DockPanel.Dock="Bottom"
+            Height="{Binding Path=SpaceHeight, Mode=OneWay}"
+            Fill="Black"
+            />
+
+        <!-- left -->
+        <Rectangle
+            DockPanel.Dock="Left"
+            Width="{Binding Path=SpaceWidth, Mode=OneWay}"
+            Fill="Black"
+            />
+
+        <!-- right -->
+        <Rectangle
+            DockPanel.Dock="Right"
+            Width="{Binding Path=SpaceWidth, Mode=OneWay}"
+            Fill="Black"
+            />
+
+        <!-- movie -->
+        <Rectangle>
+            <Rectangle.Fill>
+                <VisualBrush Stretch="Fill" Visual="{Binding Path=MovieVisual, Mode=OneWay}" />
+            </Rectangle.Fill>
+        </Rectangle>
+    </DockPanel>
+</Window>

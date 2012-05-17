@@ -19,19 +19,19 @@ namespace SilhouetteSaver
     public partial class MainWindow : Window
     {
         private PlayInfo _info; // 一度だけ再生する再生情報
-        private static MainPanel _panel; // 再生画面
+        private MainPanel _panel; // 再生画面
+        public MainPanel Panel
+        {
+            get { return _panel; }
+        }
 
         private bool _isActive;
         private Point _mousePosition;
         private static double _mouseLimit = 5f; // スクリーンセーバを解除するためのマウスの移動量
 
+
         public MainWindow():this(null)
         {
-        }
-
-        protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
-        {
-            return base.HitTestCore(hitTestParameters);
         }
 
         public MainWindow(PlayInfo info)
@@ -51,6 +51,20 @@ namespace SilhouetteSaver
             _info = info;
 
             this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
+            this.LocationChanged += (s, e) =>
+            {
+                _isActive = false;
+            };
+            this.SizeChanged += (s, e) =>
+            {
+                _isActive = false;
+            };
+        }
+
+        public void Exit()
+        {
+            Mouse.OverrideCursor = null;
+            _panel.PanelExit();
         }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -68,14 +82,12 @@ namespace SilhouetteSaver
 
         void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            Mouse.OverrideCursor = null;
-            _panel.PanelExit();
+            Exit();
         }
 
         void MainWindow_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Mouse.OverrideCursor = null;
-            _panel.PanelExit();
+            Exit();
         }
 
         void MainWindow_MouseMove(object sender, MouseEventArgs e)
@@ -92,9 +104,9 @@ namespace SilhouetteSaver
                 if ((Math.Abs(_mousePosition.X - curPos.X) > _mouseLimit) ||
                     (Math.Abs(_mousePosition.Y - curPos.Y) > _mouseLimit))
                 {
-                    Mouse.OverrideCursor = null;
-                    _panel.PanelExit();
+                    Exit();
                 }
+                _mousePosition = curPos;
             }
         }
     }

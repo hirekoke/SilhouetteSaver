@@ -2,8 +2,35 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Opacity="1"
-        Loaded="MainWindow_Loaded"
-        >
-    <Canvas Width="Auto" Height="Auto" Background="Transparent" 
-                x:Name="canvas"/>
+           Background="Transparent" >
+    <!-- top -->
+    <Rectangle
+            DockPanel.Dock="Top" x:Name="top"
+            Height="{Binding Path=SpaceHeight, Mode=OneWay}"
+            Fill="Black"
+            />
+
+    <!-- bottom -->
+    <Rectangle
+            DockPanel.Dock="Bottom" x:Name="bottom"
+            Height="{Binding Path=SpaceHeight, Mode=OneWay}"
+            Fill="Black"
+            />
+
+    <!-- left -->
+    <Rectangle
+            DockPanel.Dock="Left" x:Name="left"
+            Width="{Binding Path=SpaceWidth, Mode=OneWay}"
+            Fill="Black"
+            />
+
+    <!-- right -->
+    <Rectangle
+            DockPanel.Dock="Right" x:Name="right"
+            Width="{Binding Path=SpaceWidth, Mode=OneWay}"
+            Fill="Black"
+            />
+
+    <!-- movie -->
+    <Rectangle Stretch="Fill" x:Name="movRect" />
 </DockPanel>

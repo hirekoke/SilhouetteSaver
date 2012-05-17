@@ -29,6 +29,12 @@ namespace SilhouetteSaver
             playListGrid.ItemsSource = c.PlayList;
         }
 
+        public bool ShowInAllScreen
+        {
+            get { return Config.Instance.ShowInAllScreen; }
+            set { Config.Instance.ShowInAllScreen = value; }
+        }
+
         #region メインボタン処理
         private void okButton_Click(object sender, RoutedEventArgs e)
         {
@@ -210,6 +216,7 @@ namespace SilhouetteSaver
             PlayInfo info = tb.DataContext as PlayInfo;
             if (info == null) return;
 
+            // 設定窓からの再生ではマルチディスプレイに対応しないよ
             MainWindow main = new MainWindow(info);
 
             main.ShowDialog();
